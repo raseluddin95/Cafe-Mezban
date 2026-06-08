@@ -785,17 +785,14 @@ function processSheetData(rows) {
     let offers = [];
     let categoriesMap = {};
 
-    // এখানে আপনার পছন্দের ডিফল্ট ছবিগুলোর লিংক দিন
+    // 🌟 আপনার গুগল শিটের ক্যাটাগরির সাথে মিলিয়ে ডিফল্ট ছবি সেট করা হলো
     const categoryImages = {
-        "pizza": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80",
-        "burger": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80",
-        "drinks": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=300&q=80",
-        "coffee": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=300&q=80",
-        "set menu": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80",
-        "dessert": "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=300&q=80"
+        "fast food": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80", // বার্গার/পিজ্জা/ফাস্টফুডের জন্য
+        "drinks": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=300&q=80",    // জুস/কফি/ড্রিংকসের জন্য
+        "biriyani": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=300&q=80"   // বিরিয়ানির জন্য
     };
 
-    // একদম ব্যাকআপ ছবি (যদি কোনো ক্যাটাগরিই না মিলে)
+    // যদি কোনো ক্যাটাগরিই না মিলে তবে এই ব্যাকআপ ছবি আসবে
     const defaultImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80";
 
     rows.forEach(row => {
@@ -823,16 +820,16 @@ function processSheetData(rows) {
             }
         }
 
-        // ৩. ক্যাটাগরি অনুযায়ী সঠিক ডিফল্ট ছবি নির্ধারণ (স্মার্ট ম্যাচিং)
+        // ৩. ক্যাটাগরি অনুযায়ী সঠিক ডিফল্ট ছবি নির্ধারণ
         let matchedDefaultImg = defaultImage;
         for (let key in categoryImages) {
-            if (catId.includes(key)) { // যেমন: 'cool coffee' এর ভেতর 'coffee' লেখাটা আছে কিনা চেক করবে
+            if (catId.includes(key)) {
                 matchedDefaultImg = categoryImages[key];
                 break;
             }
         }
 
-        // যদি শিটে সঠিক লিংক থাকে তবে সেটা দেখাবে, নাহলে ম্যাচিং হওয়া ক্যাটাগরি ছবি দেখাবে
+        // যদি শিটে সঠিক লিংক থাকে তবে সেটা দেখাবে, নাহলে ক্যাটাগরি অনুযায়ী ডিফল্ট ছবি দেখাবে
         let pImg = (sheetImg !== "" && sheetImg.startsWith("http")) ? sheetImg : matchedDefaultImg;
 
         // অফার নাকি রেগুলার আইটেম চেক করা
