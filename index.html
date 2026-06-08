@@ -862,15 +862,26 @@ function buildOffers() {
         return;
     }
     document.getElementById("offers").style.display = "block";
-    document.getElementById("offers-container").innerHTML = GLOBAL_MENU_DATA.offers.map(o => `
-        <div class="offer-card">
-            <span class="offer-badge">${o.badge}</span>
-            <h3>${o.title}</h3>
-            <p>${o.description}</p>
-            <div class="offer-price">${o.price}</div>
-            <button class="offer-order-btn" onclick='openModal(${JSON.stringify(o).replace(/'/g, "'")})'><i class="fa-brands fa-whatsapp"></i> Order Now</button>
-        </div>
-    `).join("");
+    
+    // অফারের জন্য একটি ডিফল্ট ছবি যদি শিটে কোনো ছবি না থাকে
+    const defaultOfferImg = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80";
+
+    document.getElementById("offers-container").innerHTML = GLOBAL_MENU_DATA.offers.map(o => {
+        // চেক করা হচ্ছে শিটে ছবি আছে কিনা, না থাকলে ডিফল্ট ছবি বসবে
+        let offerImg = (o.image && o.image.startsWith("http")) ? o.image : defaultOfferImg;
+
+        return `
+            <div class="offer-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <span class="offer-badge">${o.badge}</span>
+                <!-- 📸 এখানে নতুন ইমেজ ট্যাগ যুক্ত করা হলো -->
+                <img src="${offerImg}" alt="${o.title}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border-glass);" onerror="this.src='${defaultOfferImg}'">
+                <h3>${o.title}</h3>
+                <p style="margin-bottom: 5px;">${o.description}</p>
+                <div class="offer-price" style="margin-bottom: 5px;">${o.price}</div>
+                <button class="offer-order-btn" onclick='openModal(${JSON.stringify(o).replace(/'/g, "'")})'><i class="fa-brands fa-whatsapp"></i> Order Now</button>
+            </div>
+        `;
+    }).join("");
 }
 
 function buildMenu() {
