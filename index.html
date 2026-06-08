@@ -154,15 +154,24 @@
         .offers-section {
             padding: 0 20px 40px;
         }
+        /* 🌟 FIXED: Special Treats Card Middle Alignment */
         .offer-slider {
             display: flex;
             gap: 20px;
             overflow-x: auto;
-            padding-bottom: 10px;
+            padding: 10px 10px 20px 10px;
             scrollbar-width: none;
+            justify-content: center;
+            flex-wrap: wrap;
         }
         .offer-slider::-webkit-scrollbar {
             display: none;
+        }
+        @media (max-width: 767px) {
+            .offer-slider {
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+            }
         }
         .offer-card {
             min-width: 280px;
@@ -226,7 +235,6 @@
             padding: 0 20px 40px;
         }
         
-        /* 🌟 FIXED: Category center alignment & padding */
         .category-tabs {
             display: flex;
             justify-content: center;
@@ -241,12 +249,10 @@
         .category-tabs::-webkit-scrollbar {
             display: none;
         }
-        /* মোবাইল রেসপন্সিভ সেন্টারিং সাপোর্ট */
         @media (max-width: 767px) {
             .category-tabs {
                 justify-content: flex-start;
             }
-            /* যদি ক্যাটাগরি উইন্ডো সাইজের চেয়ে ছোট হয় তবে সেন্টারে থাকবে */
             .category-tabs:after { content: ''; padding-right: 20px; flex-shrink: 0; }
         }
         
@@ -302,21 +308,21 @@
         }
         .menu-details {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .menu-meta {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             flex-wrap: wrap;
         }
         .menu-title {
             font-size: 1rem;
             font-weight: 600;
             color: var(--text-light);
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
         }
         .menu-price {
             color: var(--coral);
@@ -602,7 +608,7 @@
             .fab-container { bottom: 30px; }
             .modal-box { border-radius: 28px; margin-bottom: 40px; }
             .info-section, .menu-container, .offers-section, .order-section, .map-section { max-width: 1100px; margin-left: auto; margin-right: auto; }
-            .category-tabs { justify-content: center; }
+            .offer-slider { justify-content: center; flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -624,7 +630,8 @@
     <div class="info-actions">
         <a href="tel:+8801761793580" class="btn btn-outline"><i class="fa-solid fa-phone"></i> Call Now</a>
         <a href="https://wa.me/8801761793580" target="_blank" class="btn btn-outline"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-        <a href="https://maps.google.com/?q=Shilpokola+Jhenaidah" target="_blank" class="btn btn-outline"><i class="fa-solid fa-map-location-dot"></i> Directions</a>
+        <!-- 🌟 FIXED: Map Link Updated -->
+        <a href="https://maps.app.goo.gl/VuXc8ypy6nBwK5dR7" target="_blank" class="btn btn-outline"><i class="fa-solid fa-map-location-dot"></i> Directions</a>
     </div>
 </section>
 
@@ -701,7 +708,8 @@
         <div class="map-fallback">
             <i class="fa-solid fa-location-dot" style="font-size:2rem; color:var(--coral); margin-bottom:12px;"></i>
             <p><strong>Cafe Mezban</strong><br>Opposite of Shilpokola, Jhenaidah</p>
-            <a href="https://maps.google.com/?q=Shilpokola+Jhenaidah" target="_blank" class="btn btn-coral" style="margin-top:12px;">Open in Maps</a>
+            <!-- 🌟 FIXED: Map Link Updated -->
+            <a href="https://maps.app.goo.gl/VuXc8ypy6nBwK5dR7" target="_blank" class="btn btn-coral" style="margin-top:12px;">Open in Maps</a>
         </div>
     </div>
 </section>
@@ -746,14 +754,15 @@
                 <button class="qty-btn" onclick="changeModalQty(1)">+</button>
             </div>
         </div>
-        <div class="form-group"><label>Your Name</label><input type="text" id="modal-name" class="form-control"></div>
-        <div class="form-group"><label>Phone</label><input type="tel" id="modal-phone" class="form-control"></div>
+        <!-- 🌟 FIXED: Added placeholder (example blur text) to popup name & phone fields -->
+        <div class="form-group"><label>Your Name</label><input type="text" id="modal-name" class="form-control" placeholder="e.g. Hasan"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="modal-phone" class="form-control" placeholder="+880 17xxxxxxxx"></div>
         <div class="delivery-toggle">
             <button class="dtoggle-btn active" id="modal-toggle-dine" onclick="setModalType('dine')">Dine In</button>
             <button class="dtoggle-btn" id="modal-toggle-delivery" onclick="setModalType('delivery')">Delivery</button>
         </div>
-        <div id="modal-table-group"><div class="form-group"><label>Table No.</label><input type="text" id="modal-table" class="form-control"></div></div>
-        <div id="modal-address-group" style="display:none;"><div class="form-group"><label>Address</label><textarea id="modal-address" class="form-control" rows="2"></textarea></div></div>
+        <div id="modal-table-group"><div class="form-group"><label>Table No.</label><input type="text" id="modal-table" class="form-control" placeholder="Table 5"></div></div>
+        <div id="modal-address-group" style="display:none;"><div class="form-group"><label>Address</label><textarea id="modal-address" class="form-control" rows="2" placeholder="Full address with landmark"></textarea></div></div>
         <div class="modal-total"><span>Total</span><strong id="modal-total">৳0</strong></div>
         <button class="btn btn-coral" style="width:100%;" onclick="sendModalOrder()"><i class="fa-brands fa-whatsapp"></i> Confirm Order</button>
     </div>
@@ -806,7 +815,6 @@ function processSheetData(rows) {
     let dynamicCategoryImages = {};
     const defaultImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80";
 
-    // ১ নম্বর পাস: ক্যাটাগরির ডিফল্ট ছবি খোঁজা
     rows.forEach(row => {
         let rawCat = row.category || row.Category || "General";
         let catId = rawCat.toLowerCase().trim();
@@ -825,7 +833,6 @@ function processSheetData(rows) {
         }
     });
 
-    // ২ নম্বর পাস: অফারসহ সব আইটেম প্রসেস করা ও ব্যাজ রিড করা
     rows.forEach(row => {
         let rawCat = row.category || row.Category || "General";
         let catId = rawCat.toLowerCase().trim();
@@ -852,7 +859,7 @@ function processSheetData(rows) {
         if(catId === "offers" || catId === "offer") {
             offers.push({
                 badge: pBadge || "OFFER",
-                title: pName,
+                name: pName, // 🌟 FIXED: Object field changed to "name" for popup integration
                 description: pDesc,
                 price: "৳" + pPrice,
                 priceNum: parseInt(pPrice) || 0,
@@ -888,25 +895,23 @@ function buildOffers() {
     document.getElementById("offers-container").innerHTML = GLOBAL_MENU_DATA.offers.map(o => {
         let offerImg = (o.image && o.image.startsWith("http")) ? o.image : defaultOfferImg;
 
+        // 🌟 FIXED: "Order" to "Order now" text added below
         return `
             <div class="offer-card" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 15px; min-width: 310px; max-width: 400px; padding: 16px;">
-                
                 <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
                     <div>
                         <span class="offer-badge" style="position: static; display: inline-block; width: fit-content; margin-bottom: 8px; padding: 2px 10px; font-size: 0.7rem;">${o.badge}</span>
-                        <h3 style="margin-bottom: 4px; font-size: 1.1rem; line-height: 1.3;">${o.title}</h3>
+                        <h3 style="margin-bottom: 4px; font-size: 1.1rem; line-height: 1.3;">${o.name}</h3>
                         <p style="font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px;">${o.description}</p>
                     </div>
                     <div>
                         <div class="offer-price" style="margin-bottom: 8px; font-size: 1.1rem;">${o.price}</div>
-                        <button class="offer-order-btn" onclick='openModal(${JSON.stringify(o).replace(/'/g, "'")})' style="padding: 6px 14px; font-size: 0.75rem;"><i class="fa-brands fa-whatsapp"></i> Order</button>
+                        <button class="offer-order-btn" onclick='openModal(${JSON.stringify(o).replace(/'/g, "'")})' style="padding: 6px 14px; font-size: 0.75rem;"><i class="fa-brands fa-whatsapp"></i> Order now</button>
                     </div>
                 </div>
-
                 <div style="width: 100px; height: 100px; flex-shrink: 0;">
-                    <img src="${offerImg}" alt="${o.title}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; border: 1px solid var(--border-glass);" onerror="this.src='${defaultOfferImg}'">
+                    <img src="${offerImg}" alt="${o.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; border: 1px solid var(--border-glass);" onerror="this.src='${defaultOfferImg}'">
                 </div>
-
             </div>
         `;
     }).join("");
@@ -921,7 +926,6 @@ function buildMenu() {
 
     GLOBAL_MENU_DATA.categories.forEach((cat, idx) => {
         tabsHtml += `<button class="tab-btn ${idx===0 ? 'active' : ''}" data-cat="${cat.id}">${cat.label}</button>`;
-        
         gridsHtml += `<div class="menu-grid ${idx===0 ? 'active' : ''}" id="grid-${cat.id}">`;
         
         cat.items.forEach(item => {
@@ -931,12 +935,13 @@ function buildMenu() {
             
             let isSoldOut = item.badge.toLowerCase() === "sold out" || item.badge.toLowerCase() === "unavailable";
 
+            // 🌟 FIXED: Regular Menu Badges render ABOVE/AFTER the item text, not before
             if (item.badge && !isSoldOut) {
-                badgeHtml = `<span style="background:var(--coral); color:#0a192f; font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:10px; margin-right:6px; display:inline-block; vertical-align:middle;">${item.badge}</span>`;
+                badgeHtml = `<div style="background:var(--coral); color:#0a192f; font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:10px; width: fit-content; margin-bottom:4px;">${item.badge}</div>`;
             }
 
             if (isSoldOut) {
-                badgeHtml = `<span style="background:#ef4444; color:white; font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:10px; margin-right:6px; display:inline-block; vertical-align:middle;">SOLD OUT</span>`;
+                badgeHtml = `<div style="background:#ef4444; color:white; font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:10px; width: fit-content; margin-bottom:4px;">SOLD OUT</div>`;
                 orderTagHtml = `<span class="tap-order-tag" style="color:#ef4444; font-weight:600;"><i class="fa-solid fa-circle-xmark"></i> Temporarily Sold Out</span>`;
                 clickAction = `onclick="alert('Sorry! This item is currently unavailable.')"`;
             } else {
@@ -947,8 +952,9 @@ function buildMenu() {
                 <div class="menu-card glass-panel" ${clickAction}>
                     <img class="menu-img" src="${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=150&q=80'">
                     <div class="menu-details">
+                        ${badgeHtml}
                         <div class="menu-meta">
-                            <span class="menu-title">${badgeHtml}${item.name}</span>
+                            <span class="menu-title">${item.name}</span>
                             <span class="menu-price">${item.price}</span>
                         </div>
                         <p class="menu-desc">${item.description}</p>
@@ -974,7 +980,6 @@ function buildMenu() {
 }
 
 function openModal(item) {
-    // Sold out চেক লজিক
     if (item.badge && (item.badge.toLowerCase() === "sold out" || item.badge.toLowerCase() === "unavailable")) {
         alert('Sorry! This item is currently unavailable.');
         return;
