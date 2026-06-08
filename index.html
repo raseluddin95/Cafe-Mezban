@@ -755,7 +755,7 @@
 
 <script>
 // ================== GOOGLE SHEET CONFIGURATION ==================
-// ⚠️ এখানে আপনার কপি করা গুগল ওয়েব অ্যাপ (Apps Script Deployment) লিংকটি বসিয়ে দিন
+// ⚠️ এখানে আপনার কপি করা গুগল ওয়েব অ্যাপ লিংকটি রয়েছে
 const apiURL = "https://script.google.com/macros/s/AKfycbyT41VoOjiJz0o-XQGevUUNwe4azoTyMskOKQsgbJN6OJol02WHkJR-HsRF_tW-mY7W/exec"; 
 
 const WA_NUMBER = "8801761793580";
@@ -787,30 +787,36 @@ function processSheetData(rows) {
     let categoriesMap = {};
 
     rows.forEach(row => {
-        let catId = row.category ? row.category.toLowerCase().trim() : "general";
+        // যদি শিটে category না থাকে, তবে এটিকে 'General' ক্যাটাগরিতে নিয়ে যাবে
+        let rawCat = row.category || row.Category || "General";
+        let catId = rawCat.toLowerCase().trim();
         
+        let pName = row.name || row.Name || "Unnamed Item";
+        let pPrice = row.price || row.Price || 0;
+        let pDesc = row.description || row.Description || row.Drinks || ""; // Drinks কলাম থাকলে সেটাকে বিবরণ হিসেবে নেবে
+        let pImg = row.image || row.Image || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=150&q=80";
+        let pBadge = row.badge || row.Badge || "New";
+
         // If it's an offer/special treat
         if(catId === "offers" || catId === "offer") {
             offers.push({
-                badge: row.badge || "Special",
-                title: row.name,
-                description: row.description || "",
-                price: "৳" + row.price,
-                priceNum: parseInt(row.price) || 0
+                badge: pBadge,
+                title: pName,
+                description: pDesc,
+                price: "৳" + pPrice,
+                priceNum: parseInt(pPrice) || 0
             });
         } else {
             // Regular Menu Item Grouping
             if(!categoriesMap[catId]) {
-                // Formatting clean Category Names from code handles
-                let label = row.category;
-                categoriesMap[catId] = { id: catId, label: label, items: [] };
+                categoriesMap[catId] = { id: catId, label: rawCat, items: [] };
             }
             categoriesMap[catId].items.push({
-                name: row.name,
-                price: "৳" + row.price,
-                priceNum: parseInt(row.price) || 0,
-                description: row.description || "",
-                image: row.image || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=150&q=80"
+                name: pName,
+                price: "৳" + pPrice,
+                priceNum: parseInt(pPrice) || 0,
+                description: pDesc,
+                image: pImg
             });
         }
     });
@@ -825,6 +831,7 @@ function buildOffers() {
         document.getElementById("offers").style.display = "none";
         return;
     }
+    document.getElementById("offers").style.display = "block";
     document.getElementById("offers-container").innerHTML = GLOBAL_MENU_DATA.offers.map(o => `
         <div class="offer-card">
             <span class="offer-badge">${o.badge}</span>
