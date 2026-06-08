@@ -603,6 +603,7 @@
     </div>
 </section>
 
+<!-- Offers Section -->
 <section class="offers-section" id="offers">
     <h2 class="section-title">Special Treats</h2>
     <div class="offer-slider" id="offers-container">
@@ -610,6 +611,7 @@
     </div>
 </section>
 
+<!-- Digital Menu -->
 <section class="menu-container" id="menu">
     <h2 class="section-title">Digital Menu</h2>
     <div class="category-tabs" id="category-tabs"></div>
@@ -618,6 +620,7 @@
     </div>
 </section>
 
+<!-- Order section -->
 <section class="order-section" id="order">
     <h2 class="section-title">Place an Order</h2>
     <div class="order-form-container glass-panel">
@@ -666,6 +669,7 @@
     </div>
 </section>
 
+<!-- Location -->
 <section class="map-section" id="location">
     <h2 class="section-title">Find Us</h2>
     <div class="map-container">
@@ -699,6 +703,7 @@
     <a href="tel:+8801761793580" class="fab fab-call"><i class="fa-solid fa-phone"></i></a>
 </div>
 
+<!-- MODAL FOR ORDER -->
 <div class="modal-overlay" id="order-modal" onclick="closeModalOverlay(event)">
     <div class="modal-box">
         <div class="modal-header">
@@ -729,6 +734,7 @@
     </div>
 </div>
 
+<!-- DEVELOPER CONTACT MODAL -->
 <div class="modal-overlay" id="devModal" onclick="closeDevModal(event)">
     <div class="modal-box" style="text-align: center;">
         <div class="modal-header" style="justify-content: flex-end;">
@@ -779,7 +785,7 @@ function processSheetData(rows) {
     let offers = [];
     let categoriesMap = {};
 
-    // ================== ক্যাটাগরি ফিক্সড ব্যাকআপ ছবি ==================
+    // ক্যাটাগরি অনুযায়ী ডিফল্ট ব্যাকআপ ছবি
     const categoryImages = {
         "pizza": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80",
         "burger": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80",
@@ -800,10 +806,13 @@ function processSheetData(rows) {
         let pDesc = row.description || row.Description || "";
         let pBadge = row.badge || row.Badge || "New";
 
-        // 🌟 স্মার্ট ইমেজ লজিক: 
-        // শিটে লিংক থাকলে সেটাই ব্যবহার করবে, না থাকলে ক্যাটাগরির ডিফল্ট ছবি বসাবে।
-        let sheetImg = row.image || row.Image || "";
-        let pImg = sheetImg.trim() !== "" ? sheetImg.trim() : (categoryImages[catId] || defaultImage);
+        // 🌟 ইমেজ কন্ডিশন ফিক্সড করা হয়েছে:
+        let sheetImg = "";
+        if (row.image !== undefined && row.image !== null) sheetImg = String(row.image).trim();
+        else if (row.Image !== undefined && row.Image !== null) sheetImg = String(row.Image).trim();
+
+        // যদি শিটের ঘর খালি না থাকে, তবে শিটের লিংক বসবে। খালি থাকলে ডিফল্ট ছবি বসবে।
+        let pImg = (sheetImg !== "") ? sheetImg : (categoryImages[catId] || defaultImage);
 
         // If it's an offer/special treat
         if(catId === "offers" || catId === "offer") {
