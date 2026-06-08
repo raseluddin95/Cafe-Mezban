@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Cafe Mezban | Premium Cafe & Rooftop | Jhenaidah</title>
+    <meta name="description" content="Experience the best cafe dining at Cafe Mezban, opposite Shilpokola, Jhenaidah. View our digital QR menu, exclusive offers & order online.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ========== COLOR UPDATE: DARK BLUE + CORAL ORANGE ========== */
+        :root {
+            --bg-dark: #0a192f;        /* deep dark blue */
+            --card-bg: rgba(10, 25, 47, 0.75);
+            --coral: #FF7F50;          /* coral orange */
+            --coral-hover: #ff9a6e;
+            --text-light: #f5f5f7;
+            --text-muted: #b0c4de;
+            --border-glass: rgba(255, 127, 80, 0.2);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+        .btn-coral {
+            background: linear-gradient(135deg, var(--coral), #e5622e);
+            color: #111;
+        }
+        .btn-coral:hover {
+            background: linear-gradient(135deg, var(--coral-hover), var(--coral));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 127, 80, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-glass);
+            color: var(--text-light);
+        }
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--coral);
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--coral);
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--coral);
+            margin: 12px auto 0;
+            border-radius: 4px;
+        }
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            height: 75vh;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(rgba(10, 25, 47, 0.7), rgba(10, 25, 47, 0.95)), url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+        }
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--coral);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .hero-content p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        /* Info section */
+        .info-section {
+            padding: 30px 20px;
+            margin: -50px 20px 40px;
+            position: relative;
+            z-index: 10;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+        .info-item i {
+            font-size: 1.5rem;
+            color: var(--coral);
+            margin-bottom: 10px;
+        }
+        .info-item p {
+            font-size: 0.95rem;
+        }
+        .info-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        /* Offers slider */
+        .offers-section {
+            padding: 0 20px 40px;
+        }
+        .offer-slider {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: none;
+        }
+        .offer-slider::-webkit-scrollbar {
+            display: none;
+        }
+        .offer-card {
+            min-width: 280px;
+            flex: 1;
+            padding: 22px;
+            background: linear-gradient(135deg, rgba(255, 127, 80, 0.15) 0%, rgba(10, 25, 47, 0.9) 100%);
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-glass);
+        }
+        .offer-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--coral);
+            color: #0a192f;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+        .offer-card h3 {
+            color: var(--coral);
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+        .offer-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .offer-price {
+            color: var(--coral);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 14px;
+        }
+        .offer-order-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 127, 80, 0.2);
+            border: 1px solid var(--coral);
+            color: var(--coral);
+            padding: 7px 18px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+        }
+        .offer-order-btn:hover {
+            background: var(--coral);
+            color: #0a192f;
+        }
+
+        /* MENU SECTION */
+        .menu-container {
+            padding: 0 20px 40px;
+        }
+        .category-tabs {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            scrollbar-width: none;
+        }
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .tab-btn {
+            padding: 10px 24px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            white-space: nowrap;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+        }
+        .tab-btn.active {
+            background: var(--coral);
+            color: #0a192f;
+            font-weight: 600;
+            border-color: var(--coral);
+        }
+        .menu-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .menu-grid.active {
+            display: grid;
+            animation: fadeIn 0.4s ease;
+        }
+        .menu-card {
+            display: flex;
+            gap: 18px;
+            padding: 16px;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .menu-card:hover {
+            border-color: var(--coral);
+            transform: translateY(-3px);
+            background: rgba(255, 127, 80, 0.08);
+        }
+        .menu-img {
+            width: 85px;
+            height: 85px;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 1px solid var(--border-glass);
+            flex-shrink: 0;
+        }
+        .menu-details {
+            flex: 1;
+        }
+        .menu-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+        .menu-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        .menu-price {
+            color: var(--coral);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .menu-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .tap-order-tag {
+            font-size: 0.7rem;
+            color: var(--coral);
+            margin-top: 8px;
+            display: block;
+            opacity: 0.85;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 200;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .modal-overlay.open {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal-box {
+            background: #0f1f33;
+            border: 1px solid var(--border-glass);
+            border-radius: 28px 28px 0 0;
+            padding: 28px 22px 40px;
+            width: 100%;
+            max-width: 500px;
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 92vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .modal-item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--coral);
+        }
+        .modal-item-price {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+        .modal-close {
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: var(--text-muted);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        .qty-row {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            border-radius: 60px;
+            padding: 10px 16px;
+            margin: 18px 0;
+            justify-content: space-between;
+        }
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 127, 80, 0.2);
+            border: 1px solid var(--coral);
+            color: var(--coral);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .qty-num {
+            font-size: 1.2rem;
+            font-weight: 700;
+            min-width: 36px;
+            text-align: center;
+            color: white;
+        }
+        .delivery-toggle {
+            display: flex;
+            gap: 0;
+            margin: 15px 0;
+            border-radius: 60px;
+            overflow: hidden;
+            border: 1px solid var(--border-glass);
+        }
+        .dtoggle-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .dtoggle-btn.active {
+            background: var(--coral);
+            color: #0a192f;
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: block;
+        }
+        .form-control, .order-menu-select {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-glass);
+            padding: 12px 14px;
+            border-radius: 30px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
+        .form-control:focus, .order-menu-select:focus {
+            outline: none;
+            border-color: var(--coral);
+        }
+        .modal-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-top: 1px solid var(--border-glass);
+            margin: 16px 0 10px;
+            font-weight: 700;
+        }
+        .modal-total strong {
+            color: var(--coral);
+            font-size: 1.3rem;
+        }
+
+        /* ORDER SECTION */
+        .order-section {
+            padding: 0 20px 40px;
+        }
+        .order-form-container {
+            padding: 28px;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        /* Map, footer */
+        .map-section {
+            padding: 0 20px 40px;
+        }
+        .map-container {
+            height: 260px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border-glass);
+        }
+        .map-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=600&q=80') center/cover;
+            text-align: center;
+        }
+        footer {
+            background: #061020;
+            padding: 32px 20px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border-glass);
+        }
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--coral);
+        }
+        .dev-credit {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .dev-credit a {
+            color: var(--coral);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 68px;
+            background: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.7rem;
+            transition: var(--transition);
+            gap: 4px;
+        }
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+        .nav-item.active, .nav-item:hover {
+            color: var(--coral);
+        }
+        .fab-container {
+            position: fixed;
+            bottom: 85px;
+            right: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 99;
+        }
+        .fab {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+            transition: 0.2s;
+            font-size: 1.4rem;
+        }
+        .fab-wp { background-color: #25D366; }
+        .fab-call { background-color: #0284c7; }
+
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+        @media (min-width: 768px) {
+            .bottom-nav { display: none; }
+            body { padding-bottom: 0; }
+            .fab-container { bottom: 30px; }
+            .modal-box { border-radius: 28px; margin-bottom: 40px; }
+            .info-section, .menu-container, .offers-section, .order-section, .map-section { max-width: 1100px; margin-left: auto; margin-right: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<header id="home">
+    <div class="hero-content">
+        <h1>Cafe Mezban</h1>
+        <p>Cozy vibes • Premium Flavors • Rooftop Feel</p>
+        <a href="#menu" class="btn btn-coral"><i class="fa-solid fa-mug-hot"></i> Explore Menu</a>
+    </div>
+</header>
+
+<!-- Info section with new address -->
+<section class="info-section glass-panel">
+    <div class="info-grid">
+        <div class="info-item"><i class="fa-solid fa-location-dot"></i><p><strong>📍 Location</strong><br>Opposite of Shilpokola, Jhenaidah</p></div>
+        <div class="info-item"><i class="fa-solid fa-clock"></i><p><strong>Opening Hours</strong><br>11:00 AM – 11:00 PM (Everyday)</p></div>
+    </div>
+    <div class="info-actions">
+        <a href="tel:+8801725908500" class="btn btn-outline"><i class="fa-solid fa-phone"></i> Call Now</a>
+        <a href="https://wa.me/8801725908500" target="_blank" class="btn btn-outline"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+        <a href="https://maps.google.com/?q=Shilpokola+Jhenaidah" target="_blank" class="btn btn-outline"><i class="fa-solid fa-map-location-dot"></i> Directions</a>
+    </div>
+</section>
+
+<!-- Offers Section (Dynamic) -->
+<section class="offers-section" id="offers">
+    <h2 class="section-title">Special Treats</h2>
+    <div class="offer-slider" id="offers-container"></div>
+</section>
+
+<!-- Digital Menu -->
+<section class="menu-container" id="menu">
+    <h2 class="section-title">Digital Menu</h2>
+    <div class="category-tabs" id="category-tabs"></div>
+    <div id="menu-grids-wrapper"></div>
+</section>
+
+<!-- Order section (quick order) -->
+<section class="order-section" id="order">
+    <h2 class="section-title">Place an Order</h2>
+    <div class="order-form-container glass-panel">
+        <div class="form-group">
+            <label>🍽️ Select item</label>
+            <select class="order-menu-select" id="order-item">
+                <option value="">-- Choose a delicious item --</option>
+            </select>
+        </div>
+        <div class="qty-row">
+            <span class="qty-label">🔢 Quantity</span>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="changeOrderQty(-1)">−</button>
+                <span class="qty-num" id="order-qty-num">1</span>
+                <button class="qty-btn" onclick="changeOrderQty(1)">+</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>👤 Your Name</label>
+            <input type="text" id="order-name" class="form-control" placeholder="e.g. Hasan">
+        </div>
+        <div class="form-group">
+            <label>📞 Phone Number</label>
+            <input type="tel" id="order-phone" class="form-control" placeholder="+880 17xxxxxxxx">
+        </div>
+        <label style="font-size:0.8rem;">📍 Order type</label>
+        <div class="delivery-toggle" style="margin-bottom: 12px;">
+            <button class="dtoggle-btn active" id="toggle-dine" onclick="setOrderType('dine')">🍽️ Dine In</button>
+            <button class="dtoggle-btn" id="toggle-delivery" onclick="setOrderType('delivery')">🚚 Delivery</button>
+        </div>
+        <div class="form-group" id="order-table-group">
+            <label>🪑 Table No.</label>
+            <input type="text" id="order-table" class="form-control" placeholder="Table 5">
+        </div>
+        <div class="form-group" id="order-address-group" style="display:none;">
+            <label>🏠 Delivery Address</label>
+            <textarea id="order-address" class="form-control" rows="2" placeholder="Full address with landmark"></textarea>
+        </div>
+        <div class="modal-total" id="order-total-row" style="display:none;">
+            <span>Estimated Total</span>
+            <strong id="order-total-display">৳0</strong>
+        </div>
+        <button class="btn btn-coral" style="width:100%; margin-top:10px;" onclick="sendOrderWhatsApp()">
+            <i class="fa-brands fa-whatsapp"></i> Order on WhatsApp
+        </button>
+    </div>
+</section>
+
+<!-- Location -->
+<section class="map-section" id="location">
+    <h2 class="section-title">Find Us</h2>
+    <div class="map-container">
+        <div class="map-fallback">
+            <i class="fa-solid fa-location-dot" style="font-size:2rem; color:var(--coral); margin-bottom:12px;"></i>
+            <p><strong>Cafe Mezban</strong><br>Opposite of Shilpokola, Jhenaidah</p>
+            <a href="https://maps.google.com/?q=Shilpokola+Jhenaidah" target="_blank" class="btn btn-coral" style="margin-top:12px;">Open in Maps</a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-logo">Cafe Mezban</div>
+    <p style="font-size:0.8rem; color:var(--text-muted);">Best cafe & rooftop experience in Jhenaidah</p>
+    <div class="dev-credit">
+        Developed by <strong style="color:var(--coral);">Signature Agency</strong> — Digital solutions for modern business
+    </div>
+</footer>
+
+<!-- Bottom Nav + extra Developer Tab -->
+<nav class="bottom-nav">
+    <a href="#home" class="nav-item active"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="#menu" class="nav-item"><i class="fa-solid fa-utensils"></i> Menu</a>
+    <a href="#offers" class="nav-item"><i class="fa-solid fa-tags"></i> Offers</a>
+    <a href="#order" class="nav-item"><i class="fa-solid fa-bag-shopping"></i> Order</a>
+    <a href="#location" class="nav-item"><i class="fa-solid fa-map"></i> Map</a>
+    <a href="#" class="nav-item" id="devContactBtn"><i class="fa-solid fa-code"></i> Dev</a>
+</nav>
+
+<!-- Floating buttons -->
+<div class="fab-container">
+    <a href="https://wa.me/8801725908500" target="_blank" class="fab fab-wp"><i class="fa-brands fa-whatsapp"></i></a>
+    <a href="tel:+8801725908500" class="fab fab-call"><i class="fa-solid fa-phone"></i></a>
+</div>
+
+<!-- MODAL FOR ORDER -->
+<div class="modal-overlay" id="order-modal" onclick="closeModalOverlay(event)">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div>
+                <div class="modal-item-name" id="modal-item-name"></div>
+                <div class="modal-item-price" id="modal-item-price"></div>
+            </div>
+            <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="qty-row">
+            <span>🔢 Quantity</span>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="changeModalQty(-1)">−</button>
+                <span class="qty-num" id="modal-qty-num">1</span>
+                <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+            </div>
+        </div>
+        <div class="form-group"><label>Your Name</label><input type="text" id="modal-name" class="form-control"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="modal-phone" class="form-control"></div>
+        <div class="delivery-toggle">
+            <button class="dtoggle-btn active" id="modal-toggle-dine" onclick="setModalType('dine')">Dine In</button>
+            <button class="dtoggle-btn" id="modal-toggle-delivery" onclick="setModalType('delivery')">Delivery</button>
+        </div>
+        <div id="modal-table-group"><div class="form-group"><label>Table No.</label><input type="text" id="modal-table" class="form-control"></div></div>
+        <div id="modal-address-group" style="display:none;"><div class="form-group"><label>Address</label><textarea id="modal-address" class="form-control" rows="2"></textarea></div></div>
+        <div class="modal-total"><span>Total</span><strong id="modal-total">৳0</strong></div>
+        <button class="btn btn-coral" style="width:100%;" onclick="sendModalOrder()"><i class="fa-brands fa-whatsapp"></i> Confirm Order</button>
+    </div>
+</div>
+
+<!-- DEVELOPER CONTACT MODAL (Signature Agency) -->
+<div class="modal-overlay" id="devModal" onclick="closeDevModal(event)">
+    <div class="modal-box" style="text-align: center;">
+        <div class="modal-header" style="justify-content: flex-end;">
+            <button class="modal-close" onclick="closeDevModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <i class="fa-solid fa-laptop-code" style="font-size: 3rem; color: var(--coral); margin-bottom: 12px;"></i>
+        <h2 style="color: var(--coral);">Signature Agency</h2>
+        <p style="margin: 12px 0;">Digital innovation partner for restaurants & businesses.<br>Need a QR menu, graphics, or online presence?</p>
+        <div style="background: rgba(255,255,255,0.05); border-radius: 40px; padding: 12px; margin: 15px 0;">
+            <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> <strong>+880 1725-908500</strong>
+        </div>
+        <button class="btn btn-coral" onclick="window.open('https://wa.me/8801725908500?text=Hi%20Signature%20Agency,%20I%20need%20digital%20service%20for%20my%20restaurant.','_blank')">
+            <i class="fa-brands fa-whatsapp"></i> Contact Developer
+        </button>
+        <p style="font-size: 0.7rem; margin-top: 20px; color: var(--text-muted);">🌐 Website, Graphics, IT Training & Digital Marketing</p>
+    </div>
+</div>
+
+<script>
+// ================== MENU & OFFERS DATA (Cafe Mezban) ==================
+const MENU_DATA = {
+  offers: [
+    { badge: "15% OFF", title: "Cafe Combo", description: "1x Classic Burger, Fries & Soft Drink", price: "৳499", priceNum: 499 },
+    { badge: "Chef's Pick", title: "BBQ Platter", description: "Chicken wings, beef kebab, spicy fries", price: "৳650", priceNum: 650 }
+  ],
+  categories: [
+    { id: "coffee", label: "☕ Coffee & Drinks", items: [{ name: "Caramel Latte", price: "৳180", priceNum: 180, description: "Smooth caramel & espresso", image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=150&q=80" }, { name: "Iced Mocha", price: "৳190", priceNum: 190, description: "Chocolate & cold brew", image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=150&q=80" }] },
+    { id: "snacks", label: "🍔 Snacks", items: [{ name: "Crispy Chicken Burger", price: "৳220", priceNum: 220, description: "Grilled patty, lettuce, mayo", image: "https://images.unsplash.com/photo-1551782450-17144efb9c50?auto=format&fit=crop&w=150&q=80" }, { name: "Nachos Supreme", price: "৳280", priceNum: 280, description: "Cheese, jalapeños, salsa", image: "https://images.unsplash.com/photo-1513456852971-30c0b8199ebe?auto=format&fit=crop&w=150&q=80" }] },
+    { id: "pasta", label: "🍝 Pasta", items: [{ name: "Alfredo Pasta", price: "৳310", priceNum: 310, description: "Creamy parmesan sauce", image: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=150&q=80" }] },
+    { id: "dessert", label: "🍰 Dessert", items: [{ name: "Molten Lava Cake", price: "৳210", priceNum: 210, description: "Warm chocolate with ice cream", image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=150&q=80" }] }
+  ]
+};
+
+// Build offers and menu
+function buildOffers() {
+    document.getElementById("offers-container").innerHTML = MENU_DATA.offers.map(o => `
+        <div class="offer-card">
+            <span class="offer-badge">${o.badge}</span>
+            <h3>${o.title}</h3>
+            <p>${o.description}</p>
+            <div class="offer-price">${o.price}</div>
+            <button class="offer-order-btn" onclick='openModal(${JSON.stringify(o).replace(/'/g, "&#39;")})'><i class="fa-brands fa-whatsapp"></i> Order Now</button>
+        </div>
+    `).join("");
+}
+
+function buildMenu() {
+    let tabsHtml = "", gridsHtml = "", optionsHtml = '<option value="">-- Select an item --</option>';
+    MENU_DATA.categories.forEach((cat, idx) => {
+        tabsHtml += `<button class="tab-btn ${idx===0 ? 'active' : ''}" data-cat="${cat.id}">${cat.label}</button>`;
+        gridsHtml += `<div class="menu-grid ${idx===0 ? 'active' : ''}" id="grid-${cat.id}">` +
+            cat.items.map(item => `<div class="menu-card glass-panel" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
+                <img class="menu-img" src="${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=150&q=80'">
+                <div class="menu-details"><div class="menu-meta"><span class="menu-title">${item.name}</span><span class="menu-price">${item.price}</span></div>
+                <p class="menu-desc">${item.description}</p><span class="tap-order-tag"><i class="fa-brands fa-whatsapp"></i> Tap to Order</span></div></div>`).join("") + `</div>`;
+        cat.items.forEach(item => { optionsHtml += `<option value="${item.name}" data-price="${item.priceNum}">${item.name} (${item.price})</option>`; });
+    });
+    document.getElementById("category-tabs").innerHTML = tabsHtml;
+    document.getElementById("menu-grids-wrapper").innerHTML = gridsHtml;
+    document.getElementById("order-item").innerHTML = optionsHtml;
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", function(){
+        let catId = this.dataset.cat;
+        document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+        this.classList.add("active");
+        document.querySelectorAll(".menu-grid").forEach(g=>g.classList.remove("active"));
+        if(document.getElementById(`grid-${catId}`)) document.getElementById(`grid-${catId}`).classList.add("active");
+    }));
+}
+
+// Modal logic & WhatsApp integration
+const WA_NUMBER = "8801725908500";
+let modalPrice = 0, modalQty = 1, modalType = "dine";
+let orderQtyGlobal = 1, orderTypeGlobal = "dine";
+
+function openModal(item) {
+    modalPrice = item.priceNum;
+    modalQty = 1;
+    document.getElementById("modal-item-name").innerText = item.name;
+    document.getElementById("modal-item-price").innerHTML = item.price + " each";
+    document.getElementById("modal-qty-num").innerText = "1";
+    document.getElementById("modal-total").innerHTML = "৳" + item.priceNum;
+    setModalType("dine");
+    document.getElementById("order-modal").classList.add("open");
+    document.body.style.overflow = "hidden";
+}
+function closeModal() { document.getElementById("order-modal").classList.remove("open"); document.body.style.overflow = ""; }
+function closeModalOverlay(e) { if(e.target.id === "order-modal") closeModal(); }
+function changeModalQty(d) { modalQty = Math.max(1, modalQty + d); document.getElementById("modal-qty-num").innerText = modalQty; document.getElementById("modal-total").innerHTML = "৳" + (modalPrice * modalQty); }
+function setModalType(type) { modalType = type; document.getElementById("modal-toggle-dine").classList.toggle("active", type==="dine"); document.getElementById("modal-toggle-delivery").classList.toggle("active", type==="delivery"); document.getElementById("modal-table-group").style.display = type==="dine" ? "block" : "none"; document.getElementById("modal-address-group").style.display = type==="delivery" ? "block" : "none"; }
+function sendModalOrder() {
+    let name = document.getElementById("modal-name").value.trim(), phone = document.getElementById("modal-phone").value.trim(), table = document.getElementById("modal-table").value.trim(), addr = document.getElementById("modal-address").value.trim(), itemName = document.getElementById("modal-item-name").innerText;
+    let total = modalPrice * modalQty;
+    let msg = `🍽️ *Cafe Mezban* - New Order\n\n📌 Item: ${itemName}\n🔢 Qty: ${modalQty}\n💰 Total: ৳${total}\n👤 Name: ${name || "—"}\n📞 Phone: ${phone || "—"}\n${modalType === "dine" ? `🪑 Table: ${table || "Not specified"}` : `🏠 Address: ${addr || "—"}`}\n\n_Order from QR menu_`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+    closeModal();
+}
+function changeOrderQty(d) { orderQtyGlobal = Math.max(1, orderQtyGlobal + d); document.getElementById("order-qty-num").innerText = orderQtyGlobal; updateOrderTotal(); }
+function setOrderType(type) { orderTypeGlobal = type; document.getElementById("toggle-dine").classList.toggle("active", type==="dine"); document.getElementById("toggle-delivery").classList.toggle("active", type==="delivery"); document.getElementById("order-table-group").style.display = type==="dine" ? "block" : "none"; document.getElementById("order-address-group").style.display = type==="delivery" ? "block" : "none"; }
+function updateOrderTotal() { let sel = document.getElementById("order-item"); let opt = sel.options[sel.selectedIndex]; if(!opt || !opt.dataset.price) { document.getElementById("order-total-row").style.display = "none"; return; } let price = parseInt(opt.dataset.price) || 0; document.getElementById("order-total-display").innerHTML = "৳" + (price * orderQtyGlobal); document.getElementById("order-total-row").style.display = "flex"; }
+function sendOrderWhatsApp() {
+    let sel = document.getElementById("order-item"); let opt = sel.options[sel.selectedIndex];
+    if(!opt || !opt.value) { alert("Please select an item from menu."); return; }
+    let price = parseInt(opt.dataset.price) || 0, total = price * orderQtyGlobal;
+    let name = document.getElementById("order-name").value.trim(), phone = document.getElementById("order-phone").value.trim(), table = document.getElementById("order-table").value.trim(), addr = document.getElementById("order-address").value.trim();
+    let msg = `🍽️ *Cafe Mezban Order* 🧡\n\nItem: ${opt.value}\nQuantity: ${orderQtyGlobal}\nTotal: ৳${total}\nName: ${name || "—"}\nPhone: ${phone || "—"}\n${orderTypeGlobal === "dine" ? `Table: ${table || "—"}` : `Address: ${addr || "—"}`}`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+}
+// Developer Contact Modal
+document.getElementById("devContactBtn").addEventListener("click", function(e){
+    e.preventDefault();
+    document.getElementById("devModal").classList.add("open");
+    document.body.style.overflow = "hidden";
+});
+function closeDevModal(e) { if(e && e.target !== document.getElementById("devModal") && e.target !== undefined) return; document.getElementById("devModal").classList.remove("open"); document.body.style.overflow = ""; }
+
+// Active nav highlight
+window.addEventListener("load", () => { buildOffers(); buildMenu(); updateOrderTotal(); document.getElementById("order-item").addEventListener("change", () => { orderQtyGlobal = 1; document.getElementById("order-qty-num").innerText = "1"; updateOrderTotal(); }); });
+window.addEventListener("scroll", () => { let sections = ["home","offers","menu","order","location"]; let current = "home"; sections.forEach(id => { let el = document.getElementById(id); if(el && el.getBoundingClientRect().top <= 100) current = id; }); document.querySelectorAll(".nav-item").forEach(a => { let href = a.getAttribute("href"); if(href && href.includes(current)) a.classList.add("active"); else a.classList.remove("active"); }); });
+</script>
+</body>
+</html>
