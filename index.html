@@ -591,11 +591,10 @@
     </div>
 </header>
 
-<!-- Info section with new address -->
 <section class="info-section glass-panel">
     <div class="info-grid">
         <div class="info-item"><i class="fa-solid fa-location-dot"></i><p><strong>📍 Location</strong><br>Opposite of Shilpokola, Jhenaidah</p></div>
-        <div class="info-item"><i class="fa-solid fa-clock"></i><p><strong>Opening Hours</strong><br>10:00 AM – 10:00 PM (Without friyday)</p></div>
+        <div class="info-item"><i class="fa-solid fa-clock"></i><p><strong>Opening Hours</strong><br>10:00 AM – 10:00 PM (Without Friday)</p></div>
     </div>
     <div class="info-actions">
         <a href="tel:+8801761793580" class="btn btn-outline"><i class="fa-solid fa-phone"></i> Call Now</a>
@@ -604,20 +603,24 @@
     </div>
 </section>
 
-<!-- Offers Section (Dynamic) -->
+<!-- Offers Section -->
 <section class="offers-section" id="offers">
     <h2 class="section-title">Special Treats</h2>
-    <div class="offer-slider" id="offers-container"></div>
+    <div class="offer-slider" id="offers-container">
+        <p style="text-align:center; width:100%; color:var(--text-muted);">Loading offers...</p>
+    </div>
 </section>
 
 <!-- Digital Menu -->
 <section class="menu-container" id="menu">
     <h2 class="section-title">Digital Menu</h2>
     <div class="category-tabs" id="category-tabs"></div>
-    <div id="menu-grids-wrapper"></div>
+    <div id="menu-grids-wrapper">
+        <p style="text-align:center; color:var(--text-muted);">Loading menu items...</p>
+    </div>
 </section>
 
-<!-- Order section (quick order) -->
+<!-- Order section -->
 <section class="order-section" id="order">
     <h2 class="section-title">Place an Order</h2>
     <div class="order-form-container glass-panel">
@@ -686,7 +689,6 @@
     </div>
 </footer>
 
-<!-- Bottom Nav + extra Developer Tab -->
 <nav class="bottom-nav">
     <a href="#home" class="nav-item active"><i class="fa-solid fa-house"></i> Home</a>
     <a href="#menu" class="nav-item"><i class="fa-solid fa-utensils"></i> Menu</a>
@@ -696,7 +698,6 @@
     <a href="#" class="nav-item" id="devContactBtn"><i class="fa-solid fa-code"></i> Dev</a>
 </nav>
 
-<!-- Floating buttons -->
 <div class="fab-container">
     <a href="https://wa.me/8801761793580" target="_blank" class="fab fab-wp"><i class="fa-brands fa-whatsapp"></i></a>
     <a href="tel:+8801761793580" class="fab fab-call"><i class="fa-solid fa-phone"></i></a>
@@ -733,7 +734,7 @@
     </div>
 </div>
 
-<!-- DEVELOPER CONTACT MODAL (Signature Agency) -->
+<!-- DEVELOPER CONTACT MODAL -->
 <div class="modal-overlay" id="devModal" onclick="closeDevModal(event)">
     <div class="modal-box" style="text-align: center;">
         <div class="modal-header" style="justify-content: flex-end;">
@@ -753,23 +754,78 @@
 </div>
 
 <script>
-// ================== MENU & OFFERS DATA (Cafe Mezban) ==================
-const MENU_DATA = {
-  offers: [
-    { badge: "15% OFF", title: "Cafe Combo", description: "1x Classic Burger, Fries & Soft Drink", price: "৳499", priceNum: 499 },
-    { badge: "Chef's Pick", title: "BBQ Platter", description: "Chicken wings, beef kebab, spicy fries", price: "৳650", priceNum: 650 }
-  ],
-  categories: [
-    { id: "coffee", label: "☕ Coffee & Drinks", items: [{ name: "Caramel Latte", price: "৳180", priceNum: 180, description: "Smooth caramel & espresso", image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=150&q=80" }, { name: "Iced Mocha", price: "৳190", priceNum: 190, description: "Chocolate & cold brew", image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=150&q=80" }] },
-    { id: "snacks", label: "🍔 Snacks", items: [{ name: "Crispy Chicken Burger", price: "৳220", priceNum: 220, description: "Grilled patty, lettuce, mayo", image: "https://images.unsplash.com/photo-1551782450-17144efb9c50?auto=format&fit=crop&w=150&q=80" }, { name: "Nachos Supreme", price: "৳280", priceNum: 280, description: "Cheese, jalapeños, salsa", image: "https://images.unsplash.com/photo-1513456852971-30c0b8199ebe?auto=format&fit=crop&w=150&q=80" }] },
-    { id: "pasta", label: "🍝 Pasta", items: [{ name: "Alfredo Pasta", price: "৳310", priceNum: 310, description: "Creamy parmesan sauce", image: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=150&q=80" }] },
-    { id: "dessert", label: "🍰 Dessert", items: [{ name: "Molten Lava Cake", price: "৳210", priceNum: 210, description: "Warm chocolate with ice cream", image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=150&q=80" }] }
-  ]
-};
+// ================== GOOGLE SHEET CONFIGURATION ==================
+// ⚠️ এখানে আপনার কপি করা গুগল ওয়েব অ্যাপ (Apps Script Deployment) লিংকটি বসিয়ে দিন
+const apiURL = "https://script.google.com/macros/s/AKfycbyT41VoOjiJz0o-XQGevUUNwe4azoTyMskOKQsgbJN6OJol02WHkJR-HsRF_tW-mY7W/exec"; 
 
-// Build offers and menu
+const WA_NUMBER = "8801761793580";
+let modalPrice = 0, modalQty = 1, modalType = "dine";
+let orderQtyGlobal = 1, orderTypeGlobal = "dine";
+let GLOBAL_MENU_DATA = { offers: [], categories: [] };
+
+// Fetch data live from Google Sheet API
+async function fetchLiveMenuData() {
+    try {
+        const response = await fetch(apiURL);
+        const rawData = await response.json();
+        
+        // Process raw sheet data into project format
+        processSheetData(rawData);
+        
+        // Build UI Components after data successfully arrives
+        buildOffers();
+        buildMenu();
+        updateOrderTotal();
+    } catch (error) {
+        console.error("Error fetching live data from Google Sheet:", error);
+        document.getElementById("menu-grids-wrapper").innerHTML = `<p style="text-align:center; color:red;">Failed to load menu. Please try refresh.</p>`;
+    }
+}
+
+function processSheetData(rows) {
+    let offers = [];
+    let categoriesMap = {};
+
+    rows.forEach(row => {
+        let catId = row.category ? row.category.toLowerCase().trim() : "general";
+        
+        // If it's an offer/special treat
+        if(catId === "offers" || catId === "offer") {
+            offers.push({
+                badge: row.badge || "Special",
+                title: row.name,
+                description: row.description || "",
+                price: "৳" + row.price,
+                priceNum: parseInt(row.price) || 0
+            });
+        } else {
+            // Regular Menu Item Grouping
+            if(!categoriesMap[catId]) {
+                // Formatting clean Category Names from code handles
+                let label = row.category;
+                categoriesMap[catId] = { id: catId, label: label, items: [] };
+            }
+            categoriesMap[catId].items.push({
+                name: row.name,
+                price: "৳" + row.price,
+                priceNum: parseInt(row.price) || 0,
+                description: row.description || "",
+                image: row.image || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=150&q=80"
+            });
+        }
+    });
+
+    GLOBAL_MENU_DATA.offers = offers;
+    GLOBAL_MENU_DATA.categories = Object.values(categoriesMap);
+}
+
+// Build offers slider dynamically
 function buildOffers() {
-    document.getElementById("offers-container").innerHTML = MENU_DATA.offers.map(o => `
+    if(GLOBAL_MENU_DATA.offers.length === 0) {
+        document.getElementById("offers").style.display = "none";
+        return;
+    }
+    document.getElementById("offers-container").innerHTML = GLOBAL_MENU_DATA.offers.map(o => `
         <div class="offer-card">
             <span class="offer-badge">${o.badge}</span>
             <h3>${o.title}</h3>
@@ -780,20 +836,33 @@ function buildOffers() {
     `).join("");
 }
 
+// Build Categories & Grids dynamically
 function buildMenu() {
     let tabsHtml = "", gridsHtml = "", optionsHtml = '<option value="">-- Select an item --</option>';
-    MENU_DATA.categories.forEach((cat, idx) => {
+    
+    if(GLOBAL_MENU_DATA.categories.length === 0) {
+        document.getElementById("menu-grids-wrapper").innerHTML = `<p style="text-align:center; color:var(--text-muted);">No menu items found.</p>`;
+        return;
+    }
+
+    GLOBAL_MENU_DATA.categories.forEach((cat, idx) => {
         tabsHtml += `<button class="tab-btn ${idx===0 ? 'active' : ''}" data-cat="${cat.id}">${cat.label}</button>`;
         gridsHtml += `<div class="menu-grid ${idx===0 ? 'active' : ''}" id="grid-${cat.id}">` +
             cat.items.map(item => `<div class="menu-card glass-panel" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
                 <img class="menu-img" src="${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=150&q=80'">
                 <div class="menu-details"><div class="menu-meta"><span class="menu-title">${item.name}</span><span class="menu-price">${item.price}</span></div>
                 <p class="menu-desc">${item.description}</p><span class="tap-order-tag"><i class="fa-brands fa-whatsapp"></i> Tap to Order</span></div></div>`).join("") + `</div>`;
-        cat.items.forEach(item => { optionsHtml += `<option value="${item.name}" data-price="${item.priceNum}">${item.name} (${item.price})</option>`; });
+        
+        cat.items.forEach(item => { 
+            optionsHtml += `<option value="${item.name}" data-price="${item.priceNum}">${item.name} (${item.price})</option>`; 
+        });
     });
+    
     document.getElementById("category-tabs").innerHTML = tabsHtml;
     document.getElementById("menu-grids-wrapper").innerHTML = gridsHtml;
     document.getElementById("order-item").innerHTML = optionsHtml;
+    
+    // Setup tab clicks
     document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", function(){
         let catId = this.dataset.cat;
         document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
@@ -804,10 +873,6 @@ function buildMenu() {
 }
 
 // Modal logic & WhatsApp integration
-const WA_NUMBER = "8801761793580";
-let modalPrice = 0, modalQty = 1, modalType = "dine";
-let orderQtyGlobal = 1, orderTypeGlobal = "dine";
-
 function openModal(item) {
     modalPrice = item.priceNum;
     modalQty = 1;
@@ -841,6 +906,7 @@ function sendOrderWhatsApp() {
     let msg = `🍽️ *Cafe Mezban Order* 🧡\n\nItem: ${opt.value}\nQuantity: ${orderQtyGlobal}\nTotal: ৳${total}\nName: ${name || "—"}\nPhone: ${phone || "—"}\n${orderTypeGlobal === "dine" ? `Table: ${table || "—"}` : `Address: ${addr || "—"}`}`;
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
 }
+
 // Developer Contact Modal
 document.getElementById("devContactBtn").addEventListener("click", function(e){
     e.preventDefault();
@@ -849,8 +915,12 @@ document.getElementById("devContactBtn").addEventListener("click", function(e){
 });
 function closeDevModal(e) { if(e && e.target !== document.getElementById("devModal") && e.target !== undefined) return; document.getElementById("devModal").classList.remove("open"); document.body.style.overflow = ""; }
 
-// Active nav highlight
-window.addEventListener("load", () => { buildOffers(); buildMenu(); updateOrderTotal(); document.getElementById("order-item").addEventListener("change", () => { orderQtyGlobal = 1; document.getElementById("order-qty-num").innerText = "1"; updateOrderTotal(); }); });
+// Trigger Live Google Sheet Fetch on Load
+window.addEventListener("load", () => { 
+    fetchLiveMenuData(); 
+    document.getElementById("order-item").addEventListener("change", () => { orderQtyGlobal = 1; document.getElementById("order-qty-num").innerText = "1"; updateOrderTotal(); }); 
+});
+
 window.addEventListener("scroll", () => { let sections = ["home","offers","menu","order","location"]; let current = "home"; sections.forEach(id => { let el = document.getElementById(id); if(el && el.getBoundingClientRect().top <= 100) current = id; }); document.querySelectorAll(".nav-item").forEach(a => { let href = a.getAttribute("href"); if(href && href.includes(current)) a.classList.add("active"); else a.classList.remove("active"); }); });
 </script>
 </body>
