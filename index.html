@@ -785,7 +785,7 @@ function processSheetData(rows) {
     let offers = [];
     let categoriesMap = {};
 
-    // ক্যাটাগরি অনুযায়ী ডিফল্ট ব্যাকআপ ছবি
+    // প্রতিটি ক্যাটাগরির নিজস্ব ব্যাকআপ ইমেজ গ্যালারি
     const categoryImages = {
         "pizza": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80",
         "burger": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80",
@@ -806,13 +806,17 @@ function processSheetData(rows) {
         let pDesc = row.description || row.Description || "";
         let pBadge = row.badge || row.Badge || "New";
 
-        // 🌟 ইমেজ কন্ডিশন ফিক্সড করা হয়েছে:
+        // 🌟 ইমেজ রিডিং সিস্টেম সম্পূর্ণ পুনর্নির্মাণ করা হলো
         let sheetImg = "";
-        if (row.image !== undefined && row.image !== null) sheetImg = String(row.image).trim();
-        else if (row.Image !== undefined && row.Image !== null) sheetImg = String(row.Image).trim();
+        if (row.hasOwnProperty('image') && row.image !== null) {
+            sheetImg = String(row.image).trim();
+        } else if (row.hasOwnProperty('Image') && row.Image !== null) {
+            sheetImg = String(row.Image).trim();
+        }
 
-        // যদি শিটের ঘর খালি না থাকে, তবে শিটের লিংক বসবে। খালি থাকলে ডিফল্ট ছবি বসবে।
-        let pImg = (sheetImg !== "") ? sheetImg : (categoryImages[catId] || defaultImage);
+        // যদি শিটের ঘর খালি না থাকে, তাহলে শিটের দেওয়া লাইভ ইমেজ লিংক কাজ করবে। 
+        // আর যদি ফাঁকা থাকে, তবে ক্যাটাগরির নিজস্ব ডিফল্ট ছবি বসবে।
+        let pImg = (sheetImg !== "" && sheetImg.startsWith("http")) ? sheetImg : (categoryImages[catId] || defaultImage);
 
         // If it's an offer/special treat
         if(catId === "offers" || catId === "offer") {
