@@ -785,7 +785,7 @@ function processSheetData(rows) {
     let offers = [];
     let categoriesMap = {};
 
-    // প্রতিটি ক্যাটাগরির নিজস্ব ব্যাকআপ ইমেজ গ্যালারি
+    // এখানে আপনার পছন্দের ডিফল্ট ছবিগুলোর লিংক দিন
     const categoryImages = {
         "pizza": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80",
         "burger": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80",
@@ -795,6 +795,7 @@ function processSheetData(rows) {
         "dessert": "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=300&q=80"
     };
 
+    // একদম ব্যাকআপ ছবি (যদি কোনো ক্যাটাগরিই না মিলে)
     const defaultImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80";
 
     rows.forEach(row => {
@@ -806,7 +807,7 @@ function processSheetData(rows) {
         let pDesc = row.description || row.Description || "";
         let pBadge = row.badge || row.Badge || "New";
 
-        // 🌟 ইমেজ রিডিং সিস্টেম সম্পূর্ণ পুনর্নির্মাণ করা হলো
+        // ১. গুগল শিট থেকে ইমেজ লিংক নেওয়া
         let sheetImg = "";
         if (row.hasOwnProperty('image') && row.image !== null) {
             sheetImg = String(row.image).trim();
@@ -814,11 +815,27 @@ function processSheetData(rows) {
             sheetImg = String(row.Image).trim();
         }
 
-        // যদি শিটের ঘর খালি না থাকে, তাহলে শিটের দেওয়া লাইভ ইমেজ লিংক কাজ করবে। 
-        // আর যদি ফাঁকা থাকে, তবে ক্যাটাগরির নিজস্ব ডিফল্ট ছবি বসবে।
-        let pImg = (sheetImg !== "" && sheetImg.startsWith("http")) ? sheetImg : (categoryImages[catId] || defaultImage);
+        // ২. ImgBB-র ভুল লিংক থাকলে সেটাকে ডিরেক্ট লিংকে রূপান্তর করার চেষ্টা
+        if (sheetImg.includes("ibb.co.com/") || sheetImg.includes("ibb.co/")) {
+            if (!sheetImg.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+                sheetImg = sheetImg.replace("ibb.co.com/", "i.ibb.co.com/");
+                sheetImg = sheetImg.replace("ibb.co/", "i.ibb.co/");
+            }
+        }
 
-        // If it's an offer/special treat
+        // ৩. ক্যাটাগরি অনুযায়ী সঠিক ডিফল্ট ছবি নির্ধারণ (স্মার্ট ম্যাচিং)
+        let matchedDefaultImg = defaultImage;
+        for (let key in categoryImages) {
+            if (catId.includes(key)) { // যেমন: 'cool coffee' এর ভেতর 'coffee' লেখাটা আছে কিনা চেক করবে
+                matchedDefaultImg = categoryImages[key];
+                break;
+            }
+        }
+
+        // যদি শিটে সঠিক লিংক থাকে তবে সেটা দেখাবে, নাহলে ম্যাচিং হওয়া ক্যাটাগরি ছবি দেখাবে
+        let pImg = (sheetImg !== "" && sheetImg.startsWith("http")) ? sheetImg : matchedDefaultImg;
+
+        // অফার নাকি রেগুলার আইটেম চেক করা
         if(catId === "offers" || catId === "offer") {
             offers.push({
                 badge: pBadge,
@@ -828,7 +845,6 @@ function processSheetData(rows) {
                 priceNum: parseInt(pPrice) || 0
             });
         } else {
-            // Regular Menu Item Grouping
             if(!categoriesMap[catId]) {
                 categoriesMap[catId] = { id: catId, label: rawCat, items: [] };
             }
