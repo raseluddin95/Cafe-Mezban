@@ -784,17 +784,40 @@ async function fetchLiveMenuData() {
 function processSheetData(rows) {
     let offers = [];
     let categoriesMap = {};
+    
+    // ক্যাটাগরির ডিফল্ট ছবিগুলো জমা রাখার জন্য খালি অবজেক্ট (এটি শিট থেকে অটো তৈরি হবে)
+    let dynamicCategoryImages = {};
 
-    // 🌟 আপনার গুগল শিটের ক্যাটাগরির সাথে মিলিয়ে ডিফল্ট ছবি সেট করা হলো
-    const categoryImages = {
-        "fast food": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80", // বার্গার/পিজ্জা/ফাস্টফুডের জন্য
-        "drinks": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=300&q=80",    // জুস/কফি/ড্রিংকসের জন্য
-        "biriyani": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=300&q=80"   // বিরিয়ানির জন্য
-    };
-
-    // যদি কোনো ক্যাটাগরিই না মিলে তবে এই ব্যাকআপ ছবি আসবে
+    // একদম ব্যাকআপ ছবি (যদি শিটের কোনো ক্যাটাগরিতেই একটাও ছবি না থাকে)
     const defaultImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80";
 
+    // ১ম ধাপ: পুরো শিট ঘুরে কোন ক্যাটাগরির জন্য কোন ছবি দেওয়া আছে তা খুঁজে বের করা
+    rows.forEach(row => {
+        let rawCat = row.category || row.Category || "General";
+        let catId = rawCat.toLowerCase().trim();
+
+        let sheetImg = "";
+        if (row.hasOwnProperty('image') && row.image !== null) {
+            sheetImg = String(row.image).trim();
+        } else if (row.hasOwnProperty('Image') && row.Image !== null) {
+            sheetImg = String(row.Image).trim();
+        }
+
+        // ImgBB লিংক ফিক্সিং
+        if (sheetImg.includes("ibb.co.com/") || sheetImg.includes("ibb.co/")) {
+            if (!sheetImg.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+                sheetImg = sheetImg.replace("ibb.co.com/", "i.ibb.co.com/");
+                sheetImg = sheetImg.replace("ibb.co/", "i.ibb.co/");
+            }
+        }
+
+        // যদি এই ক্যাটাগরির জন্য শিটে কোনো ছবি পাওয়া যায়, এবং এই ক্যাটাগরির ছবি আগে সেভ করা না হয়ে থাকে
+        if (sheetImg !== "" && sheetImg.startsWith("http") && !dynamicCategoryImages[catId]) {
+            dynamicCategoryImages[catId] = sheetImg; // এই ছবিটাকে ওই ক্যাটাগরির ডিফল্ট বানিয়ে নিলাম
+        }
+    });
+
+    // ২য় ধাপ: মেইন মেনু তৈরি করা
     rows.forEach(row => {
         let rawCat = row.category || row.Category || "General";
         let catId = rawCat.toLowerCase().trim();
@@ -804,7 +827,6 @@ function processSheetData(rows) {
         let pDesc = row.description || row.Description || "";
         let pBadge = row.badge || row.Badge || "New";
 
-        // ১. গুগল শিট থেকে ইমেজ লিংক নেওয়া
         let sheetImg = "";
         if (row.hasOwnProperty('image') && row.image !== null) {
             sheetImg = String(row.image).trim();
@@ -812,7 +834,6 @@ function processSheetData(rows) {
             sheetImg = String(row.Image).trim();
         }
 
-        // ২. ImgBB-র ভুল লিংক থাকলে সেটাকে ডিরেক্ট লিংকে রূপান্তর করার চেষ্টা
         if (sheetImg.includes("ibb.co.com/") || sheetImg.includes("ibb.co/")) {
             if (!sheetImg.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
                 sheetImg = sheetImg.replace("ibb.co.com/", "i.ibb.co.com/");
@@ -820,19 +841,12 @@ function processSheetData(rows) {
             }
         }
 
-        // ৩. ক্যাটাগরি অনুযায়ী সঠিক ডিফল্ট ছবি নির্ধারণ
-        let matchedDefaultImg = defaultImage;
-        for (let key in categoryImages) {
-            if (catId.includes(key)) {
-                matchedDefaultImg = categoryImages[key];
-                break;
-            }
-        }
+        // ছবি সিলেকশন: 
+        // ১. যদি এই লাইনে ছবি থাকে, তবে সেটাই বসবে।
+        // ২. যদি এই লাইনে ছবি না থাকে, তবে এই ক্যাটাগরির অন্য কোনো লাইনে যে ছবি দিয়েছিলেন (Dynamic), সেটা বসবে।
+        // ৩. যদি পুরো ক্যাটাগরিতেই কোনো ছবি না থাকে, তবে একদম মেইন ব্যাকআপ ছবি (defaultImage) বসবে।
+        let pImg = (sheetImg !== "" && sheetImg.startsWith("http")) ? sheetImg : (dynamicCategoryImages[catId] || defaultImage);
 
-        // যদি শিটে সঠিক লিংক থাকে তবে সেটা দেখাবে, নাহলে ক্যাটাগরি অনুযায়ী ডিফল্ট ছবি দেখাবে
-        let pImg = (sheetImg !== "" && sheetImg.startsWith("http")) ? sheetImg : matchedDefaultImg;
-
-        // অফার নাকি রেগুলার আইটেম চেক করা
         if(catId === "offers" || catId === "offer") {
             offers.push({
                 badge: pBadge,
