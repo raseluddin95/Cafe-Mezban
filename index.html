@@ -10,9 +10,9 @@
     <style>
         /* ========== COLOR UPDATE: DARK BLUE + CORAL ORANGE ========== */
         :root {
-            --bg-dark: #0a192f;        /* deep dark blue */
+            --bg-dark: #0a192f;        
             --card-bg: rgba(10, 25, 47, 0.75);
-            --coral: #FF7F50;          /* coral orange */
+            --coral: #FF7F50;          
             --coral-hover: #ff9a6e;
             --text-light: #f5f5f7;
             --text-muted: #b0c4de;
@@ -437,6 +437,8 @@
             margin-bottom: 6px;
             display: block;
         }
+        
+        /* 🌟 ড্রপডাউন ও ইনপুট ফিক্স - লেখা অদৃশ্য হয়ে যাওয়ার সমাধান */
         .form-control, .order-menu-select {
             width: 100%;
             background: rgba(255,255,255,0.05);
@@ -446,6 +448,12 @@
             color: white;
             font-family: 'Poppins', sans-serif;
             font-size: 0.9rem;
+        }
+        /* অপশনগুলোর ব্যাকগ্রাউন্ড ডার্ক এবং লেখার কালার পরিষ্কার করা হলো */
+        .order-menu-select option {
+            background-color: #0f1f33; 
+            color: #ffffff;
+            padding: 10px;
         }
         .form-control:focus, .order-menu-select:focus {
             outline: none;
@@ -754,7 +762,6 @@
 </div>
 
 <script>
-// ================== GOOGLE SHEET CONFIGURATION ==================
 const apiURL = "https://script.google.com/macros/s/AKfycbyT41VoOjiJz0o-XQGevUUNwe4azoTyMskOKQsgbJN6OJol02WHkJR-HsRF_tW-mY7W/exec"; 
 
 const WA_NUMBER = "8801761793580";
@@ -762,21 +769,16 @@ let modalPrice = 0, modalQty = 1, modalType = "dine";
 let orderQtyGlobal = 1, orderTypeGlobal = "dine";
 let GLOBAL_MENU_DATA = { offers: [], categories: [] };
 
-// Fetch data live from Google Sheet API
 async function fetchLiveMenuData() {
     try {
         const response = await fetch(apiURL);
         const rawData = await response.json();
-        
-        // Process raw sheet data into project format
         processSheetData(rawData);
-        
-        // Build UI Components after data successfully arrives
         buildOffers();
         buildMenu();
         updateOrderTotal();
     } catch (error) {
-        console.error("Error fetching live data from Google Sheet:", error);
+        console.error("Error fetching live data:", error);
         document.getElementById("menu-grids-wrapper").innerHTML = `<p style="text-align:center; color:red;">Failed to load menu. Please try refresh.</p>`;
     }
 }
@@ -784,55 +786,40 @@ async function fetchLiveMenuData() {
 function processSheetData(rows) {
     let offers = [];
     let categoriesMap = {};
-    
-    // ক্যাটাগরির ডিফল্ট ছবিগুলো জমা রাখার জন্য খালি অবজেক্ট (এটি শিট থেকে অটো তৈরি হবে)
     let dynamicCategoryImages = {};
-
-    // একদম ব্যাকআপ ছবি (যদি শিটের কোনো ক্যাটাগরিতেই একটাও ছবি না থাকে)
     const defaultImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80";
 
-    // ১ম ধাপ: পুরো শিট ঘুরে কোন ক্যাটাগরির জন্য কোন ছবি দেওয়া আছে তা খুঁজে বের করা
+    // 1st pass: find category defaults
     rows.forEach(row => {
         let rawCat = row.category || row.Category || "General";
         let catId = rawCat.toLowerCase().trim();
-
         let sheetImg = "";
-        if (row.hasOwnProperty('image') && row.image !== null) {
-            sheetImg = String(row.image).trim();
-        } else if (row.hasOwnProperty('Image') && row.Image !== null) {
-            sheetImg = String(row.Image).trim();
-        }
+        if (row.hasOwnProperty('image') && row.image !== null) sheetImg = String(row.image).trim();
+        else if (row.hasOwnProperty('Image') && row.Image !== null) sheetImg = String(row.Image).trim();
 
-        // ImgBB লিংক ফিক্সিং
         if (sheetImg.includes("ibb.co.com/") || sheetImg.includes("ibb.co/")) {
             if (!sheetImg.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
                 sheetImg = sheetImg.replace("ibb.co.com/", "i.ibb.co.com/");
                 sheetImg = sheetImg.replace("ibb.co/", "i.ibb.co/");
             }
         }
-
-        // যদি এই ক্যাটাগরির জন্য শিটে কোনো ছবি পাওয়া যায়, এবং এই ক্যাটাগরির ছবি আগে সেভ করা না হয়ে থাকে
         if (sheetImg !== "" && sheetImg.startsWith("http") && !dynamicCategoryImages[catId]) {
-            dynamicCategoryImages[catId] = sheetImg; // এই ছবিটাকে ওই ক্যাটাগরির ডিফল্ট বানিয়ে নিলাম
+            dynamicCategoryImages[catId] = sheetImg;
         }
     });
 
-    // ২য় ধাপ: মেইন মেনু তৈরি করা
+    // 2nd pass: process items
     rows.forEach(row => {
         let rawCat = row.category || row.Category || "General";
         let catId = rawCat.toLowerCase().trim();
-        
         let pName = row.name || row.Name || "Unnamed Item";
         let pPrice = row.price || row.Price || 0;
         let pDesc = row.description || row.Description || "";
         let pBadge = row.badge || row.Badge || "New";
 
         let sheetImg = "";
-        if (row.hasOwnProperty('image') && row.image !== null) {
-            sheetImg = String(row.image).trim();
-        } else if (row.hasOwnProperty('Image') && row.Image !== null) {
-            sheetImg = String(row.Image).trim();
-        }
+        if (row.hasOwnProperty('image') && row.image !== null) sheetImg = String(row.image).trim();
+        else if (row.hasOwnProperty('Image') && row.Image !== null) sheetImg = String(row.Image).trim();
 
         if (sheetImg.includes("ibb.co.com/") || sheetImg.includes("ibb.co/")) {
             if (!sheetImg.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
@@ -841,10 +828,6 @@ function processSheetData(rows) {
             }
         }
 
-        // ছবি সিলেকশন: 
-        // ১. যদি এই লাইনে ছবি থাকে, তবে সেটাই বসবে।
-        // ২. যদি এই লাইনে ছবি না থাকে, তবে এই ক্যাটাগরির অন্য কোনো লাইনে যে ছবি দিয়েছিলেন (Dynamic), সেটা বসবে।
-        // ৩. যদি পুরো ক্যাটাগরিতেই কোনো ছবি না থাকে, তবে একদম মেইন ব্যাকআপ ছবি (defaultImage) বসবে।
         let pImg = (sheetImg !== "" && sheetImg.startsWith("http")) ? sheetImg : (dynamicCategoryImages[catId] || defaultImage);
 
         if(catId === "offers" || catId === "offer") {
@@ -873,7 +856,6 @@ function processSheetData(rows) {
     GLOBAL_MENU_DATA.categories = Object.values(categoriesMap);
 }
 
-// Build offers slider dynamically
 function buildOffers() {
     if(GLOBAL_MENU_DATA.offers.length === 0) {
         document.getElementById("offers").style.display = "none";
@@ -891,10 +873,8 @@ function buildOffers() {
     `).join("");
 }
 
-// Build Categories & Grids dynamically
 function buildMenu() {
     let tabsHtml = "", gridsHtml = "", optionsHtml = '<option value="">-- Select an item --</option>';
-    
     if(GLOBAL_MENU_DATA.categories.length === 0) {
         document.getElementById("menu-grids-wrapper").innerHTML = `<p style="text-align:center; color:var(--text-muted);">No menu items found.</p>`;
         return;
@@ -917,7 +897,6 @@ function buildMenu() {
     document.getElementById("menu-grids-wrapper").innerHTML = gridsHtml;
     document.getElementById("order-item").innerHTML = optionsHtml;
     
-    // Setup tab clicks
     document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", function(){
         let catId = this.dataset.cat;
         document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
@@ -927,7 +906,6 @@ function buildMenu() {
     }));
 }
 
-// Modal logic & WhatsApp integration
 function openModal(item) {
     modalPrice = item.priceNum;
     modalQty = 1;
@@ -962,7 +940,6 @@ function sendOrderWhatsApp() {
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
 }
 
-// Developer Contact Modal
 document.getElementById("devContactBtn").addEventListener("click", function(e){
     e.preventDefault();
     document.getElementById("devModal").classList.add("open");
@@ -970,7 +947,6 @@ document.getElementById("devContactBtn").addEventListener("click", function(e){
 });
 function closeDevModal(e) { if(e && e.target !== document.getElementById("devModal") && e.target !== undefined) return; document.getElementById("devModal").classList.remove("open"); document.body.style.overflow = ""; }
 
-// Trigger Live Google Sheet Fetch on Load
 window.addEventListener("load", () => { 
     fetchLiveMenuData(); 
     document.getElementById("order-item").addEventListener("change", () => { orderQtyGlobal = 1; document.getElementById("order-qty-num").innerText = "1"; updateOrderTotal(); }); 
