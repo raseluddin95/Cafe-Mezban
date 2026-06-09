@@ -150,24 +150,18 @@
             border-top: 1px solid var(--border-glass);
         }
 
-        /* Offers System Updated (Roof Royal Style) */
+        /* Offers System Updated (Vertical multi-line stack for Mobile view) */
         .offers-section {
             padding: 0 20px 40px;
         }
         .offer-slider {
             display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding: 10px 10px 20px 10px;
-            scrollbar-width: none;
-        }
-        .offer-slider::-webkit-scrollbar {
-            display: none;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px 0;
         }
         .offer-card {
-            min-width: 320px;
-            max-width: 350px;
-            flex: 1;
+            width: 100%;
             display: flex;
             gap: 12px;
             padding: 15px;
@@ -199,9 +193,8 @@
             color: var(--coral);
             margin-bottom: 4px;
             font-size: 1rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal;
+            overflow: visible;
         }
         .offer-card p {
             font-size: 0.78rem;
@@ -251,43 +244,33 @@
             opacity: 0.55;
         }
 
-        /* MENU SECTION */
+        /* MENU SECTION (Wrap enabled for multi-line on Mobile view) */
         .menu-container {
             padding: 0 20px 40px;
         }
         .category-tabs {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 5px 20px 15px 20px;
+            gap: 8px;
+            padding: 5px 0 15px 0;
             margin-bottom: 30px;
-            scrollbar-width: none;
             width: 100%;
         }
-        .category-tabs::-webkit-scrollbar {
-            display: none;
-        }
-        @media (max-width: 767px) {
-            .category-tabs {
-                justify-content: flex-start;
-            }
-            .category-tabs:after { content: ''; padding-right: 20px; flex-shrink: 0; }
-        }
         .tab-btn {
-            padding: 10px 24px;
+            padding: 8px 18px;
             border-radius: 40px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid transparent;
+            border: 1px solid rgba(255, 127, 80, 0.1);
             color: var(--text-muted);
-            white-space: nowrap;
-            font-size: 0.9rem;
+            white-space: normal;
+            text-align: center;
+            font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
             font-family: 'Poppins', sans-serif;
-            flex-shrink: 0;
         }
         .tab-btn.active {
             background: var(--coral);
@@ -297,8 +280,8 @@
         }
         .menu-grid {
             display: none;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: 1fr;
+            gap: 15px;
         }
         .menu-grid.active {
             display: grid;
@@ -368,9 +351,8 @@
             font-size: 1rem;
             font-weight: 600;
             color: var(--text-light);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal;
+            overflow: visible;
         }
         .menu-price {
             color: var(--coral);
@@ -461,11 +443,11 @@
             font-size: 0.9rem;
         }
 
-        /* FLOATING CART BAR (Z-Index Set to 150) */
+        /* FLOATING CART BAR (Repositioned to bottom: 82px & Transition Optimized) */
         .floating-cart-bar {
             display: none;
             position: fixed;
-            bottom: 20px;
+            bottom: 82px;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 40px);
@@ -479,11 +461,17 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.5);
             text-decoration: none;
             font-weight: 600;
-            animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1);
+            transition: transform 0.3s ease, opacity 0.3s ease;
             justify-content: space-between;
         }
         .floating-cart-bar.show {
             display: flex;
+            animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        .floating-cart-bar.hide-scrolling {
+            transform: translateX(-50%) translateY(150px);
+            opacity: 0;
+            pointer-events: none;
         }
         .floating-cart-bar i {
             font-size: 1.1rem;
@@ -693,9 +681,10 @@
             font-size: 0.8rem;
             color: var(--text-muted);
         }
-        .dev-credit a {
+        .dev-credit span {
             color: var(--coral);
-            text-decoration: none;
+            text-decoration: underline;
+            cursor: pointer;
             font-weight: 500;
         }
         .bottom-nav {
@@ -721,6 +710,7 @@
             font-size: 0.7rem;
             transition: var(--transition);
             gap: 4px;
+            position: relative;
         }
         .nav-item i {
             font-size: 1.2rem;
@@ -728,14 +718,41 @@
         .nav-item.active, .nav-item:hover {
             color: var(--coral);
         }
+
+        /* BOTTOM NAV INTERACTIVE LIVE BADGE COUNTER */
+        .nav-badge-dot {
+            display: none;
+            position: absolute;
+            top: -4px;
+            right: -10px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 700;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            padding: 0 2px;
+        }
+        .nav-badge-dot.show {
+            display: flex;
+        }
+
         .fab-container {
             position: fixed;
-            bottom: 85px;
+            bottom: 145px;
             right: 18px;
             display: flex;
             flex-direction: column;
             gap: 12px;
             z-index: 99;
+            transition: transform 0.3s ease;
+        }
+        .fab-container.shift-down {
+            transform: translateY(60px);
         }
         .fab {
             width: 52px;
@@ -758,10 +775,12 @@
         @media (min-width: 768px) {
             .bottom-nav { display: none; }
             body { padding-bottom: 0; }
-            .fab-container { bottom: 30px; }
+            .fab-container { bottom: 30px; transform: none !important; }
             .modal-box { border-radius: 28px; margin-bottom: 40px; }
             .info-section, .menu-container, .offers-section, .order-section, .map-section { max-width: 1100px; margin-left: auto; margin-right: auto; }
-            .offer-slider { justify-content: center; flex-wrap: wrap; }
+            .offer-slider { flex-direction: row; justify-content: center; flex-wrap: wrap; }
+            .menu-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+            .floating-cart-bar { bottom: 20px; }
         }
     </style>
 </head>
@@ -787,7 +806,6 @@
     </div>
 </section>
 
-<!-- Offers Section -->
 <section class="offers-section" id="offers">
     <h2 class="section-title">Special Treats</h2>
     <div class="offer-slider" id="offers-container">
@@ -795,7 +813,6 @@
     </div>
 </section>
 
-<!-- Digital Menu -->
 <section class="menu-container" id="menu">
     <h2 class="section-title">Digital Menu</h2>
     <div class="category-tabs" id="category-tabs"></div>
@@ -804,12 +821,10 @@
     </div>
 </section>
 
-<!-- LIVE CART & PLACE ORDER SECTION -->
 <section class="order-section" id="order">
     <h2 class="section-title">Your Cart & Order</h2>
     <div class="order-form-container glass-panel">
         
-        <!-- Live Item Review Table Area -->
         <div id="cart-review-area">
             <div class="empty-cart-msg">আপনার ঝুড়ি খালি! মেনু থেকে খাবার সিলেক্ট করুন।</div>
         </div>
@@ -846,7 +861,6 @@
     </div>
 </section>
 
-<!-- Location -->
 <section class="map-section" id="location">
     <h2 class="section-title">Find Us</h2>
     <div class="map-container">
@@ -862,11 +876,10 @@
     <div class="footer-logo">Cafe Mezban</div>
     <p style="font-size:0.8rem; color:var(--text-muted);">Best cafe & rooftop experience in Jhenaidah</p>
     <div class="dev-credit">
-        Developed by <strong style="color:var(--coral);">Signature Agency</strong> — Digital solutions for modern business
+        Developed by <span onclick="openDevModal()">Signature Agency</span> — Digital solutions for modern business
     </div>
 </footer>
 
-<!-- FLOATING CART BAR ELEMENT -->
 <a href="#order" class="floating-cart-bar" id="floating-cart">
     <span><i class="fa-solid fa-basket-shopping"></i> <span id="float-cart-count">0</span> Items Selected</span>
     <span>Total: <span id="float-cart-total">৳0</span> <i class="fa-solid fa-arrow-right"></i></span>
@@ -876,17 +889,15 @@
     <a href="#home" class="nav-item active"><i class="fa-solid fa-house"></i> Home</a>
     <a href="#menu" class="nav-item"><i class="fa-solid fa-utensils"></i> Menu</a>
     <a href="#offers" class="nav-item"><i class="fa-solid fa-tags"></i> Offers</a>
-    <a href="#order" class="nav-item"><i class="fa-solid fa-bag-shopping"></i> Cart</a>
+    <a href="#order" class="nav-item"><i class="fa-solid fa-bag-shopping"></i> Cart <span class="nav-badge-dot" id="nav-badge-count">0</span></a>
     <a href="#location" class="nav-item"><i class="fa-solid fa-map"></i> Map</a>
-    <a href="#" class="nav-item" id="devContactBtn"><i class="fa-solid fa-code"></i> Dev</a>
 </nav>
 
-<div class="fab-container">
+<div class="fab-container" id="fab-group">
     <a href="https://wa.me/8801761793580" target="_blank" class="fab fab-wp"><i class="fa-brands fa-whatsapp"></i></a>
     <a href="tel:+8801761793580" class="fab fab-call"><i class="fa-solid fa-phone"></i></a>
 </div>
 
-<!-- QUANTITY ADD MULTI CART MODAL (Z-Index Is Fixed For Anti-Blocking) -->
 <div class="modal-overlay" id="order-modal" onclick="closeModalOverlay(event)">
     <div class="modal-box">
         <div class="modal-header">
@@ -917,8 +928,7 @@
     </div>
 </div>
 
-<!-- DEVELOPER CONTACT MODAL -->
-<div class="modal-overlay" id="devModal" onclick="closeDevModal(event)">
+<div class="modal-overlay" id="devModal" onclick="closeDevModalOverlay(event)">
     <div class="modal-box" style="text-align: center; margin-bottom: auto; margin-top: auto;">
         <div class="modal-header" style="justify-content: flex-end;">
             <button class="modal-close" onclick="closeDevModal()"><i class="fa-solid fa-xmark"></i></button>
@@ -946,6 +956,9 @@ let MY_CART = [];
 let currentItemToCart = null;
 let modalQty = 1;
 let orderTypeGlobal = "dine";
+
+let scrollTimer = null;
+let isCartVisible = false;
 
 async function fetchLiveMenuData() {
     try {
@@ -1187,13 +1200,32 @@ function updateCartUI() {
         totalPrice += (item.price * item.qty);
     });
 
+    // UPDATE BOTTOM FIXED MENUBAR LIVE COUNTER INDICATOR
+    let navBadge = document.getElementById("nav-badge-count");
+    if(totalItems > 0) {
+        navBadge.textContent = totalItems;
+        navBadge.classList.add("show");
+    } else {
+        navBadge.classList.remove("show");
+    }
+
     let floatBar = document.getElementById("floating-cart");
+    let fabGroup = document.getElementById("fab-group");
+
     if(totalItems > 0) {
         document.getElementById("float-cart-count").textContent = totalItems;
         document.getElementById("float-cart-total").textContent = "৳" + totalPrice;
         floatBar.classList.add("show");
+        isCartVisible = true;
+        if(window.innerWidth < 768) {
+            fabGroup.style.bottom = "145px";
+        }
     } else {
         floatBar.classList.remove("show");
+        isCartVisible = false;
+        if(window.innerWidth < 768) {
+            fabGroup.style.bottom = "85px";
+        }
     }
 
     let reviewArea = document.getElementById("cart-review-area");
@@ -1270,12 +1302,17 @@ function sendCartOrderWhatsApp() {
 }
 
 /* DEVELOPER CONTACT MODAL HANDLERS */
-document.getElementById("devContactBtn").addEventListener("click", function(e){
-    e.preventDefault();
+function openDevModal() {
     document.getElementById("devModal").classList.add("open");
     document.body.style.overflow = "hidden";
-});
-function closeDevModal(e) { if(e && e.target !== document.getElementById("devModal") && e.target !== undefined) return; document.getElementById("devModal").classList.remove("open"); document.body.style.overflow = ""; }
+}
+function closeDevModal() { 
+    document.getElementById("devModal").classList.remove("open"); 
+    document.body.style.overflow = ""; 
+}
+function closeDevModalOverlay(e) { 
+    if(e && e.target === document.getElementById("devModal")) closeDevModal(); 
+}
 
 window.addEventListener("load", fetchLiveMenuData);
 
@@ -1291,6 +1328,21 @@ window.addEventListener("scroll", () => {
         if(href && href.includes(current)) a.classList.add("active"); 
         else a.classList.remove("active"); 
     }); 
+
+    // Auto Hide Floating Bar & Shift FAB on Scrolling Action
+    let floatCart = document.getElementById("floating-cart");
+    let fabGroup = document.getElementById("fab-group");
+    
+    if (isCartVisible && window.innerWidth < 768) {
+        floatCart.classList.add("hide-scrolling");
+        fabGroup.classList.add("shift-down");
+        
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function() {
+            floatCart.classList.remove("hide-scrolling");
+            fabGroup.classList.remove("shift-down");
+        }, 250);
+    }
 });
 </script>
 </body>
